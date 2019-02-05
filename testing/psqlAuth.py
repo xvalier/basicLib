@@ -22,5 +22,5 @@ def checkDeviceExists(connection, deviceID):
     return psql.checkRecordExists(connection, 'Users', 'deviceID', deviceID)
 
 #Get encrypted salt/hash combo from SQL based on provided name
-def getEncryptedPass(name):
+def getEncryptedPass(connection, name):
     return psql.retrieveRecordContents(connection, 'salt,hash','Users','name',name)
