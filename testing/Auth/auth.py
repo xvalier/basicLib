@@ -26,7 +26,7 @@ def encryptPass(password):
 
 #Validation Functions-----------------------------------------------------------
 #Confirm if entered password matches the stored password
-def checkPassMatches(connection, name, password):
+def checkPass(connection, name, password):
     passMatch = 0
     storedSalt, storedHash = psqlAuth.getEncryptedPass(connection, name)
     currentHash = generateHash(password, storedSalt)
