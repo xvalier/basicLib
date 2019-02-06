@@ -1,11 +1,11 @@
-from backend.utilities import psqlUtilities as psql
-from backend.import import sqlSchema
+from backend.utilities import toolsSQL as psql
+from backend.import import schemaSQL
 
 #Composite Process--------------------------------------------------------------
 def importProcedure(connection, csvPath):
     psql.backupTableCSV(connection, 'Users', csvPath+'Users.csv')
     deleteAllTables(connection)
-    tables = sqlSchema.compileTables()
+    tables = schemaSQL.compileTables()
     createAllTables(connection, tables)
     bulkFillDatabase(connection, tables,csvPath)
 

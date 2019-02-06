@@ -1,7 +1,7 @@
 from elasticsearch import Elasticsearch
 from elasticsearch.helpers import bulk
-from backend.schema import elasticSchema
-from backend.utilities import csvUtilities as spread
+from backend.schema import schemaElastic
+from backend.utilities import toolsCSV as spread
 symptomHeader = ['id','description', 'errCode', 'phrase', 'keywords']
 
 #COMPOSITE FUNCTIONS------------------------------------------------------------
@@ -18,12 +18,12 @@ def accessElastic():
 
 #Obtain most relevant indexed documents based on query
 def executeQuery(connection, description):
-    query = elasticSchema.compileQuery(description)
+    query = schemaElastic.compileQuery(description)
     return connection.search(index='errors', doc_type='symptom', body=query)
 
 #Create schema for filter/analyzer settings prior to adding documents to index
 def createSchema(connection):
-    settings = elasticSchema.compileIndex()
+    settings = schemaElastic.compileIndex()
     connection.indices.create(index='errors', body = settings)
 
 #Deletes all documents stored in index

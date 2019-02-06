@@ -1,4 +1,4 @@
-from backend.utilities import psqlUtilities as psql
+from backend.utilities import toolsSQL as psql
 
 #Retrieve description/precision values based on node id
 def getNodeProperties(connection, id, type):

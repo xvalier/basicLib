@@ -5,7 +5,6 @@ from proto import authentication_pb2
 from proto import authentication_pb2_grpc
 from backend.auth import auth
 from backend.auth import authSQL
-from backend.utilities import psqlUtilities as psql
 
 #GRPC Server Initialization
 def serve(port, address, connection):

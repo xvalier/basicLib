@@ -1,4 +1,4 @@
-from backend.utilities import psqlUtilities as psql
+from backend.utilities import toolsSQL as psql
 
 #SQL Authentication IO Functions-----------------------------------------------
 #Add a new user record into PostgreSQL Users Table
