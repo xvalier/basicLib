@@ -30,21 +30,23 @@ resolutions = """
     """
 
 #List of table dicts (dicts have name of table and schema contents)
-tables = [
-    {
-        "name":    "Users",
-        "content": users,
-    },
-    {
-        "name":    "Symptoms",
-        "content": symptoms,
-    },
-    {
-        "name":    "Sym_Err",
-        "content": sym_err,
-    },
-    {
-        "name":    "Resolutions",
-        "content": resolutions,
-    },
-]
+def compileTables():
+    tables = [
+        {
+            "name":    "Users",
+            "content": users,
+        },
+        {
+            "name":    "Symptoms",
+            "content": symptoms,
+        },
+        {
+            "name":    "Sym_Err",
+            "content": sym_err,
+        },
+        {
+            "name":    "Resolutions",
+            "content": resolutions,
+        },
+    ]
+    return tables

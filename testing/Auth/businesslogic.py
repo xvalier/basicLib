@@ -4,7 +4,7 @@ import grpc
 from proto import authentication_pb2
 from proto import authentication_pb2_grpc
 from backend.auth import auth
-from backend.auth import psqlAuth
+from backend.auth import authSQL
 from backend.utilities import psqlUtilities as psql
 
 #GRPC Server Initialization
@@ -34,15 +34,18 @@ class AuthenticationServicer(sets_pb2_grpc.AuthenticationServicer, connection):
         #If fields are valid and name not already taken, create user
         if (auth.checkValidFields(self.connection, name, password, org, role)):
             if not (psqAuth.checkUserExists(self.connection, name)):
-                auth.makeUser(self.connection,
+                token      = auth.generateToken(request.deviceID)
+                salt, hash = auth.encryptPass(request.password)
+                authSQL.addUser(self.connection,
                     request.name,
-                    request.password,
+                    request.hash,
+                    request.salt,
                     request.organization,
                     request.role,
                     request.deviceID
                 )
                 success = 1
-                token = psqlAuth.getToken(self.connection, request.name)
+                token = authSQL.getToken(self.connection, request.name)
             else:
                 msg = 'User is already registered'
         else:
@@ -59,9 +62,9 @@ class AuthenticationServicer(sets_pb2_grpc.AuthenticationServicer, connection):
         name        = request.name
         pw          = request.password
         #If user exists and pass is correct, get token
-        if (psqlAuth.checkUserExists(self.connection, name)):
+        if (authSQL.checkUserExists(self.connection, name)):
             if (auth.checkPass(self.connection, name, pw)):
-                token = psqlAuth.getToken(self.connection, name)
+                token = authSQL.getToken(self.connection, name)
                 success = 1
             else:
                 msg = 'Invalid Password was provided'
@@ -78,8 +81,8 @@ class AuthenticationServicer(sets_pb2_grpc.AuthenticationServicer, connection):
         #Extract credentials from grpc message
         deviceID   = request.devID
         #If device is already registed, get token
-        if (psqlAuth.checkDeviceExists(self.connection, deviceID)):
-            token   = psqlAuth.getToken(self.connection, deviceID)
+        if (authSQL.checkDeviceExists(self.connection, deviceID)):
+            token   = authSQL.getToken(self.connection, deviceID)
             success = 1
         else:
             msg = 'Device is not registered to an existing user. Please register to auto-login'

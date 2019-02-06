@@ -1,11 +1,5 @@
 import hashlib, uuid
-from backend.auth import psqlAuth
-
-#Composite Functions------------------------------------------------------------
-def makeUser(connection, name, password, org, role, deviceID):
-    salt, hash = encryptPass(password)
-    token      = generateToken(deviceID)
-    psqlAuth.addUser(connection, name, hash, salt, org, role, token, deviceID)
+from backend.auth import authSQL
 
 #Encryption Functions-----------------------------------------------------------
 #Generate a unique token based on device ID and timestamp
@@ -28,7 +22,7 @@ def encryptPass(password):
 #Confirm if entered password matches the stored password
 def checkPass(connection, name, password):
     passMatch = 0
-    storedSalt, storedHash = psqlAuth.getEncryptedPass(connection, name)
+    storedSalt, storedHash = authSQL.getEncryptedPass(connection, name)
     currentHash = generateHash(password, storedSalt)
     if currentHash == storedHash:
         passMatch = 1
