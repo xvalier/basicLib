@@ -1,0 +1,14 @@
+syntax = "proto3";
+package easy;
+
+service easyService {
+	rpc easyCall(clientMSG) returns (serverMSG) {}
+}
+
+message clientMSG{
+	string request = 1;
+}
+
+message serverMSG{
+	string response = 1;
+}
