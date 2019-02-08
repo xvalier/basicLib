@@ -71,7 +71,7 @@ def wrapReceipt(message, success, token):
     sets_pb2.Receipt(message=message,successFlag=success,token=token)
 
 #GRPC Server Initialization
-def serve(port, address, connection):
+def serve(port, address, connections):
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     sets_pb2_grpc.add_AuthServicer_to_server(AuthServicer(connections), server)
     server.add_insecure_port('%s:%d' % (address, port))

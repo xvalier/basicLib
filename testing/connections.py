@@ -7,21 +7,28 @@ from backend.utilities import toolsSQL as sql
 def connectSearch(connectionString):
     user, pw               = extractCouchInfo(connectionString)
     connections            = couch.accessCouch(user, pw)
-    connections['elastic'] = accessElastic()
+    connections['elastic'] = elastic.accessElastic()
     return connections
 
 #Connect to Postgresql and ElasticSearch for Import microservice
 def connectImport(connectionString):
     host, db, user, pw     = extractPSQLInfo(connectionString)
-    connections['psql']    = accessPSQL(host, db, user, pw)
-    connections['elastic'] = accessElastic()
+    connections['psql']    = sql.accessPSQL(host, db, user, pw)
+    connections['elastic'] = elastic.accessElastic()
     connections['csv']     = extractCSVPath(connection)
     return connections
 
 #Connect to Postgresql for Auth microservice
 def connectAuth(connectionString):
     host, db, user, pw     = extractPSQLInfo(connectionString)
-    connections['psql']    = accessPSQL(host, db, user, pw)
+    connections['psql']    = sql.accessPSQL(host, db, user, pw)
+    return connections
+
+def connectTraversal(connectionString):
+    userCB, passCB             = extractCouchInfo(connectionString)
+    connections                = couch.accessCouch(userCB, passCB)
+    host, db, userSQL, passSQL = extractPSQLInfo(connectionString)
+    connections['psql']        = sql.accessPSQL(host, db, userSQL, passSQL)
     return connections
 
 #ConnectionString Functions-----------------------------------------------------

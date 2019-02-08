@@ -4,7 +4,7 @@ from backend.import import importSQL as graph
 LOCAL = '/home/xvalier/Documents/curatedTSG/connectLOCAL.ini'
 CLOUD = '/home/nikilsunilkumar/sets/curatedTSG/connectCLOUD.ini'
 
-def main(connectionElastic, connectionSQL):
+def main():
     connectionString = link.chooseConnectionString(CLOUD, LOCAL)
     connections      = link.connectImport(connectionString)
     display(addr, port, connections)

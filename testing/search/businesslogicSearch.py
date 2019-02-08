@@ -13,9 +13,7 @@ class SearchServicer(sets_pb2_grpc.SearchServicer):
         self.liveSessions  = connections['couchActive']
         self.oldSessions   = connections['couchArchives']
 
-    search   = ''
-    liveSessions  = ''
-    oldSessions = ''
+    search, liveSessions, oldSessions   = ''
 
     #Search/return symptoms that match user query description
     def getSymptomList(self, request, context):

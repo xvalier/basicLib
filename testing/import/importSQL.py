@@ -1,5 +1,5 @@
 from backend.utilities import toolsSQL as sql
-from backend.import import schemaSQL
+from backend.schema import schemaSQL
 
 #Composite Process--------------------------------------------------------------
 def importProcedure(connection, csvPath):
