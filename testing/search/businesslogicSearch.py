@@ -9,20 +9,20 @@ from backend.utilities import toolsCouch as session
 #Service Definition-------------------------------------------------------------
 class SearchServicer(sets_pb2_grpc.SearchServicer):
     def __init__(connections):
-        self.elastic    = connections['elastic']
-        self.couchLive  = connections['couchActive']
-        self.couchStore = connections['couchArchives']
+        self.search        = connections['elastic']
+        self.liveSessions  = connections['couchActive']
+        self.oldSessions   = connections['couchArchives']
 
-    elastic    = ''
-    couchLive  = ''
-    couchStore = ''
+    search   = ''
+    liveSessions  = ''
+    oldSessions = ''
 
     #Search/return symptoms that match user query description
     def getSymptomList(self, request, context):
         query, token = unwrapUserQuery(request)
-        session.newSession(self.couchLive. self.couchStore, token, query)
-        relevantSymptoms = processQuery(self.elastic, query)
-        session.storeOptions(self.couchLive, token, relevantSymptoms)
+        session.newSession(self.liveSessions. self.oldSessions, token, query)
+        relevantSymptoms = processQuery(self.search, query)
+        session.storeOptions(self.liveSessions, token, relevantSymptoms)
         message = wrapSymptomsList(relevantSymptoms)
         return message
 

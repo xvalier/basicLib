@@ -1,5 +1,6 @@
+import time
 import hashlib, uuid
-from backend.auth import authSQL
+from backend.auth import authSQL as accounts
 
 #Encryption Functions-----------------------------------------------------------
 #Generate a unique token based on device ID and timestamp
@@ -22,7 +23,7 @@ def encryptPass(password):
 #Confirm if entered password matches the stored password
 def checkPass(connection, name, password):
     passMatch = 0
-    storedSalt, storedHash = authSQL.getEncryptedPass(connection, name)
+    storedSalt, storedHash = accounts.getEncryptedPass(connection, name)
     currentHash = generateHash(password, storedSalt)
     if currentHash == storedHash:
         passMatch = 1

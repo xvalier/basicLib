@@ -3,8 +3,6 @@ from backend.utilities import toolsCouch as couch
 from backend.utilities import toolsElastic as elastic
 from backend.utilities import toolsSQL as sql
 
-
-
 #Connect to Couchbase and ElasticSearch for Search microservice
 def connectSearch(connectionString):
     user, pw               = extractCouchInfo(connectionString)
@@ -18,6 +16,12 @@ def connectImport(connectionString):
     connections['psql']    = accessPSQL(host, db, user, pw)
     connections['elastic'] = accessElastic()
     connections['csv']     = extractCSVPath(connection)
+    return connections
+
+#Connect to Postgresql for Auth microservice
+def connectAuth(connectionString):
+    host, db, user, pw     = extractPSQLInfo(connectionString)
+    connections['psql']    = accessPSQL(host, db, user, pw)
     return connections
 
 #ConnectionString Functions-----------------------------------------------------

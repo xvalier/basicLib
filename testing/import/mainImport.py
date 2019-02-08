@@ -1,6 +1,6 @@
 from backend.utilities import connections.py as link
 from backend.utilities import toolsElastic as search
-from backend.import import importSQL as sql
+from backend.import import importSQL as graph
 LOCAL = '/home/xvalier/Documents/curatedTSG/connectLOCAL.ini'
 CLOUD = '/home/nikilsunilkumar/sets/curatedTSG/connectCLOUD.ini'
 
@@ -17,7 +17,7 @@ def display(addr, port, connections):
     print('Connected PSQL: {0}'.format(connections['psql']))
 
 def uploadGraph(connections):
-    sql.importProcedure(connections['sql'], connections['csv'])
+    graph.importProcedure(connections['sql'], connections['csv'])
     print('SQL Database has been updated...')
     search.importProcedure(connections['elastic'], connections['csv'])
     print('Search Engine has been updated...')
