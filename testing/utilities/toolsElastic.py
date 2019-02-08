@@ -4,6 +4,11 @@ from backend.schema import schemaElastic
 from backend.utilities import toolsCSV as spread
 symptomHeader = ['id','description', 'errCode', 'phrase', 'keywords']
 
+#Connection Functions-----------------------------------------------------------
+#Connect to ElasticSearch Search Engine
+def accessElastic():
+    return Elasticsearch()
+
 #COMPOSITE FUNCTIONS------------------------------------------------------------
 def importProcedure(connection, csvPath):
     deleteAllDocuments(connection)
