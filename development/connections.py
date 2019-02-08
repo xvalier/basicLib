@@ -1,41 +1,24 @@
 from configparser import ConfigParser
-import psycopg2
-from couchbase.cluster import Cluster, PasswordAuthenticator
-from elasticsearch import Elasticsearch
-LOCAL = '/home/xvalier/Documents/curatedTSG/connections2.ini'
-CLOUD = '/home/nikilsunilkumar/sets/curatedTSG/connections.ini'
+from backend.utilities import toolsCouch as couch
+from backend.utilities import toolsElastic as elastic
+from backend.utilities import toolsSQL as sql
 
-def accessDatabases(cloudString, localString):
-    connections = {}
-    connectionString = chooseConnectionString(cloudString, localString)
-    couch = accessCouch(connectionString)
-    connections['couchActive']   = accessCouchBucket(couch, 'active')
-    connections['couchArchives'] = accessCouchBucket(couch, 'archives')
-    connections['sql']       = accessPSQL(connectionString)
-    connections['elastic']   = accessElastic()
+
+
+#Connect to Couchbase and ElasticSearch for Search microservice
+def connectSearch(connectionString):
+    user, pw               = extractCouchInfo(connectionString)
+    connections            = couch.accessCouch(user, pw)
+    connections['elastic'] = accessElastic()
     return connections
 
-#Database Access Functions------------------------------------------------------
-#Connect to Postgresql Database and return connection object
-def accessPSQL(connectionString):
-    host, db, user, pw = extractPSQLInfo(connectionString)
-    return psycopg2.connect(host=host,database=db,user=user,password=pw)
-
-#Connect to Couchbase Database and return database object
-def accessCouch(connectionString):
-    user, pw = extractCouchInfo(connectionString)
-    database = Cluster()
-    auth     = PasswordAuthenticator(user, pw)
-    database.authenticate(auth)
-    return database
-
-#Connect to specific Couchbase bucket from Couchbase database object
-def accessCouchBucket(database, bucket):
-    return database.open_bucket(bucket)
-
-#Connect to ElasticSearch Search Engine
-def accessElastic():
-    return Elasticsearch()
+#Connect to Postgresql and ElasticSearch for Import microservice
+def connectImport(connectionString):
+    host, db, user, pw     = extractPSQLInfo(connectionString)
+    connections['psql']    = accessPSQL(host, db, user, pw)
+    connections['elastic'] = accessElastic()
+    connections['csv']     = extractCSVPath(connection)
+    return connections
 
 #ConnectionString Functions-----------------------------------------------------
 #Determine location of connectionString based on type of server
@@ -51,6 +34,7 @@ def chooseConnectionString(cloudString, localString):
         else:
             print('Please choose either 1 or 2')
 
+#Extraction Functions-----------------------------------------------------------
 #Extract gRPC client stub info based on connectionString
 def extractClientGRPCInfo(file):
     connectionString = readINI(file)
@@ -86,6 +70,12 @@ def extractElasticInfo(file):
     connectionString = readINI(file)
     host  = connectionString['elasticsearch']['host']
     db    = connectionString['elasticsearch']['port']
+    return host, db
+
+#Extract information on directories where CSV files are stored
+def extractCSVPath(file):
+    connectionString = readINI(file)
+    return connectionString['csv']['path']
 
 #Open connectionString INI file and read its contents
 def readINI(file):

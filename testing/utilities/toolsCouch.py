@@ -12,8 +12,7 @@ def accessCouch(connectionString):
     return connections
 
 #Connect to Couchbase Database and return database object
-def accessDatabase(connectionString):
-    user, pw = extractCouchInfo(connectionString)
+def accessDatabase(user, pw):
     database = Cluster()
     auth     = PasswordAuthenticator(user, pw)
     database.authenticate(auth)
